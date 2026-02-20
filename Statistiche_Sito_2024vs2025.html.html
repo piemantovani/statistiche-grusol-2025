@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gruppo Solidarietà – Il Sito Web in Numeri (2024 vs 2025)</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #FAF7F2;
+  --card: #FFFFFF;
+  --text: #2C2C2C;
+  --text-muted: #7A7A7A;
+  --accent: #C44536;
+  --accent2: #2E6F95;
+  --accent3: #5B8C5A;
+  --accent4: #D4A843;
+  --border: #E8E2D8;
+  --shadow: 0 2px 20px rgba(0,0,0,0.06);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.hero {
+  background: linear-gradient(135deg, #2E6F95 0%, #1a4a64 60%, #C44536 100%);
+  color: white;
+  padding: 3rem 2rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: -0.5px;
+  position: relative;
+  margin-bottom: 0.3rem;
+}
+
+.hero .subtitle {
+  font-size: 1rem;
+  opacity: 0.85;
+  font-weight: 300;
+  position: relative;
+}
+
+.hero .year-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 20px;
+  padding: 0.2rem 1rem;
+  font-size: 0.85rem;
+  margin-top: 0.8rem;
+  position: relative;
+  backdrop-filter: blur(4px);
+}
+
+/* KPI Strip */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  margin: 0 1.5rem;
+  transform: translateY(-1.5rem);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.kpi {
+  background: var(--card);
+  padding: 1.2rem 1rem;
+  text-align: center;
+}
+
+.kpi-value {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.8rem;
+  color: var(--accent2);
+  line-height: 1;
+}
+
+.kpi-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+.kpi-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.kpi-change {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+
+.kpi-change.up { color: var(--accent3); }
+.kpi-change.down { color: var(--accent); }
+
+/* Navigation */
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.nav button {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 0.4rem 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav button:hover, .nav button.active {
+  background: var(--accent2);
+  color: white;
+  border-color: var(--accent2);
+}
+
+/* Sections */
+.section {
+  padding: 1.5rem;
+  display: none;
+}
+
+.section.active { display: block; }
+
+.section-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 1.5rem;
+  margin-bottom: 0.3rem;
+  color: var(--text);
+}
+
+.section-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  max-width: 650px;
+}
+
+/* Cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.2rem;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+
+.card-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.card-title .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.card.full { grid-column: 1 / -1; }
+
+/* Chart containers */
+.chart-container {
+  position: relative;
+  width: 100%;
+  max-height: 320px;
+}
+
+.chart-container.tall {
+  max-height: 420px;
+}
+
+/* Insight boxes */
+.insight {
+  background: #F0F6F9;
+  border-left: 3px solid var(--accent2);
+  padding: 0.8rem 1rem;
+  border-radius: 0 8px 8px 0;
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.insight.warning {
+  background: #FFF5F0;
+  border-left-color: var(--accent);
+}
+
+.insight.success {
+  background: #F0F7F0;
+  border-left-color: var(--accent3);
+}
+
+.insight strong { font-weight: 600; }
+
+/* Plain language explanation boxes */
+.explain-box {
+  background: #FFFBF0;
+  border: 1px dashed var(--accent4);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  margin-top: 0.8rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.explain-box .explain-title {
+  font-weight: 600;
+  color: var(--accent4);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+/* Comparison table */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.compare-table th {
+  text-align: left;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.compare-table td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #F2F0EC;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+
+.compare-table .highlight {
+  font-weight: 600;
+  color: var(--accent2);
+}
+
+.compare-table .change-up {
+  color: var(--accent3);
+  font-weight: 600;
+}
+
+.compare-table .change-down {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Data table */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 0.5rem 0.8rem;
+  border-bottom: 2px solid var(--border);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+}
+
+.data-table td {
+  padding: 0.5rem 0.8rem;
+  border-bottom: 1px solid #F2F0EC;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table .highlight {
+  font-weight: 600;
+  color: var(--accent2);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+.data-note {
+  text-align: center;
+  padding: 0.5rem 1.5rem 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.7rem; }
+  .kpi-strip { grid-template-columns: repeat(2, 1fr); margin: 0 0.8rem; }
+  .section { padding: 1rem; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card { animation: fadeIn 0.5s ease forwards; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.2s; }
+.card:nth-child(4) { animation-delay: 0.3s; }
+
+.table-scroll {
+  max-height: 340px;
+  overflow-y: auto;
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>Il Nostro Sito in Numeri</h1>
+  <div class="subtitle">grusol.it &middot; Gruppo Solidarietà</div>
+  <div class="year-badge">📊 Confronto 2024 vs 2025</div>
+</div>
+
+<div class="kpi-strip">
+  <div class="kpi">
+    <div class="kpi-value">74.570</div>
+    <div class="kpi-label">Visite al sito 2025</div>
+    <div class="kpi-change up">▲ +35% vs 2024</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">49.542</div>
+    <div class="kpi-label">Nuovi visitatori 2025</div>
+    <div class="kpi-change up">▲ +45% vs 2024</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">156.648</div>
+    <div class="kpi-label">Pagine lette 2025</div>
+    <div class="kpi-change up">▲ +24% vs 2024</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">7.418</div>
+    <div class="kpi-label">Visite da Newsletter</div>
+    <div class="kpi-change up">▲ +166% vs 2024</div>
+  </div>
+  <div class="kpi">
+    <div class="kpi-value">30,7%</div>
+    <div class="kpi-label">Tasso coinvolgimento</div>
+    <div class="kpi-sub">visitatori "attivi"</div>
+  </div>
+</div>
+
+<p class="data-note">Dati Google Analytics 4 – Confronto 1 gen–31 dic 2024 vs 1 gen–31 dic 2025</p>
+
+<nav class="nav">
+  <button class="active" onclick="showSection('confronto')">📈 Confronto Anni</button>
+  <button onclick="showSection('sorgenti')">🔍 Da Dove Arrivano</button>
+  <button onclick="showSection('contenuti')">📄 Cosa Leggono</button>
+  <button onclick="showSection('coinvolgimento')">⏱️ Coinvolgimento</button>
+  <button onclick="showSection('raccomandazioni')">💡 Cosa Fare</button>
+</nav>
+
+<!-- ===================== SEZIONE CONFRONTO ===================== -->
+<div id="confronto" class="section active">
+  <h2 class="section-title">Confronto 2024 vs 2025</h2>
+  <p class="section-desc">Il sito è cresciuto molto nel 2025. Ecco i numeri principali a confronto, con spiegazioni semplici di cosa significano.</p>
+
+  <div class="card-grid">
+    <div class="card full">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Le Metriche Principali a Confronto</div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Cosa misuriamo</th><th>2024</th><th>2025</th><th>Variazione</th><th>Cosa significa</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Visite totali (sessioni)</td>
+            <td>55.173</td>
+            <td>74.570</td>
+            <td class="change-up">+35,1%</td>
+            <td>Quante volte qualcuno ha aperto il sito</td>
+          </tr>
+          <tr>
+            <td class="highlight">Nuovi visitatori</td>
+            <td>34.080</td>
+            <td>49.542</td>
+            <td class="change-up">+45,4%</td>
+            <td>Persone che visitano il sito per la prima volta</td>
+          </tr>
+          <tr>
+            <td class="highlight">Pagine lette</td>
+            <td>125.832</td>
+            <td>156.648</td>
+            <td class="change-up">+24,5%</td>
+            <td>Quante pagine sono state aperte in totale</td>
+          </tr>
+          <tr>
+            <td class="highlight">Visite "attive"</td>
+            <td>17.325</td>
+            <td>22.913</td>
+            <td class="change-up">+32,3%</td>
+            <td>Visite dove il visitatore ha interagito (cliccato, letto)</td>
+          </tr>
+          <tr>
+            <td>Tasso di coinvolgimento</td>
+            <td>31,4%</td>
+            <td>30,7%</td>
+            <td class="change-down">−0,7 pp</td>
+            <td>% di visite in cui il visitatore ha fatto qualcosa di attivo</td>
+          </tr>
+          <tr>
+            <td>Pagine per visita</td>
+            <td>2,3</td>
+            <td>2,1</td>
+            <td class="change-down">−8,7%</td>
+            <td>Quante pagine legge in media chi visita il sito</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="insight success">
+        <strong>Sintesi:</strong> Il sito ha ricevuto quasi 20.000 visite in più nel 2025 (+35%). Sono arrivati molti più visitatori nuovi (+45%). La proporzione di chi interagisce attivamente è rimasta stabile (~31%), il che è positivo: significa che la crescita è di traffico "vero", non di passanti casuali.
+      </div>
+      <div class="explain-box">
+        <div class="explain-title">💡 Come leggere questi numeri</div>
+        <strong>"Visite" (sessioni)</strong> = ogni volta che una persona apre il sito e naviga. Se la stessa persona torna il giorno dopo, conta come 2 visite.<br>
+        <strong>"Nuovi visitatori"</strong> = persone che non avevano mai visitato il sito prima (almeno da quel dispositivo).<br>
+        <strong>"Visite attive"</strong> = visite dove la persona ha fatto qualcosa: cliccato un link, scrollato la pagina, letto per più di 10 secondi. Le visite "non attive" sono quelle dove la persona è arrivata e se n'è andata subito.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Visite al Sito: 2024 vs 2025</div>
+      <div class="chart-container"><canvas id="chart-confronto-sessioni"></canvas></div>
+      <div class="insight success">
+        <strong>+35% di visite.</strong> Il sito è passato da circa 150 visite al giorno a oltre 200. La crescita più forte è venuta dalla ricerca Google (+45%) e dalla newsletter (+166%).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Nuovi Visitatori: 2024 vs 2025</div>
+      <div class="chart-container"><canvas id="chart-confronto-nuovi"></canvas></div>
+      <div class="insight success">
+        <strong>+45% di nuovi visitatori.</strong> Quasi 50.000 persone nuove hanno scoperto grusol.it nel 2025. Questo vuol dire che il sito raggiunge un pubblico sempre più ampio.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SEZIONE SORGENTI ===================== -->
+<div id="sorgenti" class="section">
+  <h2 class="section-title">Da Dove Arrivano i Visitatori</h2>
+  <p class="section-desc">Come fanno le persone a trovare il sito? Ecco le "porte d'ingresso" principali, con una spiegazione chiara di cosa significano.</p>
+
+  <div class="card-grid">
+    <div class="card full">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Le Porte d'Ingresso al Sito: 2024 vs 2025</div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Come arrivano</th><th>2024</th><th>2025</th><th>Variazione</th><th>Cosa significa</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">🔍 Ricerca Google/Bing</td>
+            <td>27.494</td>
+            <td>39.794</td>
+            <td class="change-up">+44,7%</td>
+            <td>Chi cerca su Google argomenti trattati dal sito</td>
+          </tr>
+          <tr>
+            <td class="highlight">📩 Accesso diretto</td>
+            <td>19.111</td>
+            <td>19.406</td>
+            <td class="change-up">+1,5%</td>
+            <td>Chi digita direttamente grusol.it o usa un segnalibro</td>
+          </tr>
+          <tr>
+            <td class="highlight">🔗 Link da altri siti</td>
+            <td>5.363</td>
+            <td>9.628</td>
+            <td class="change-up">+79,5%</td>
+            <td>Chi clicca un link a grusol.it trovato su un altro sito</td>
+          </tr>
+          <tr>
+            <td class="highlight">📱 Social (Facebook ecc.)</td>
+            <td>2.996</td>
+            <td>4.955</td>
+            <td class="change-up">+65,4%</td>
+            <td>Chi arriva da Facebook, Instagram, LinkedIn</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="explain-box">
+        <div class="explain-title">💡 Dove rientra la newsletter?</div>
+        <strong>La newsletter VOXmail è nascosta in due categorie.</strong> Quando qualcuno clicca un link nella newsletter, Google Analytics lo registra in modi diversi a seconda di come è impostato il link:<br><br>
+        &bull; <strong>"Link da altri siti" (Referral):</strong> qui finisce la maggior parte dei clic dalla newsletter. Il dominio <em>grusolnew.voxmail.it</em> da solo ha generato <strong>7.418 visite nel 2025</strong> (erano 2.789 nel 2024, quindi <strong>+166%</strong>). Questi clic vengono contati come "referral" perché Google vede che il visitatore arriva dal sito di VOXmail.<br><br>
+        &bull; <strong>"Accesso diretto" (Direct):</strong> una parte dei clic dalla newsletter può finire qui. Succede quando il programma di posta o il telefono "nasconde" l'origine del clic. Google non riesce a capire da dove viene il visitatore e lo conta come "diretto".<br><br>
+        <strong>In pratica:</strong> la newsletter è la vostra seconda sorgente di traffico più importante dopo Google, e nel 2025 ha quasi triplicato il suo impatto.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Sorgenti a Confronto</div>
+      <div class="chart-container"><canvas id="chart-sorgenti-confronto"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Le Sorgenti Specifiche Più Importanti</div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Sito di provenienza</th><th>2024</th><th>2025</th><th>Var.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="highlight">Google</td><td>25.981</td><td>37.005</td><td class="change-up">+42%</td></tr>
+          <tr><td class="highlight">Newsletter (VOXmail)</td><td>2.789</td><td>7.418</td><td class="change-up">+166%</td></tr>
+          <tr><td>Facebook (tutte le varianti)</td><td>~2.920</td><td>~5.104</td><td class="change-up">+75%</td></tr>
+          <tr><td>Bing</td><td>1.056</td><td>2.308</td><td class="change-up">+119%</td></tr>
+          <tr><td>Yahoo</td><td>247</td><td>449</td><td class="change-up">+82%</td></tr>
+          <tr><td class="highlight">AI (ChatGPT, Perplexity...)</td><td>11</td><td>433</td><td class="change-up">+3.836%</td></tr>
+          <tr><td>Quotidiano Sanità</td><td>11</td><td>46</td><td class="change-up">+318%</td></tr>
+          <tr><td>Welforum.it</td><td>104</td><td>55</td><td class="change-down">−47%</td></tr>
+          <tr><td>Superando.it</td><td>114</td><td>31</td><td class="change-down">−73%</td></tr>
+        </tbody>
+      </table>
+      <div class="insight success">
+        <strong>La newsletter è la star del 2025:</strong> da 2.789 a 7.418 visite, +166%. È il dato più significativo: vuol dire che le email che mandate portano molte più persone sul sito.
+      </div>
+      <div class="insight">
+        <strong>Dato emergente — Intelligenza artificiale:</strong> 433 persone sono arrivate sul sito perché ChatGPT, Perplexity o Copilot hanno citato grusol.it nelle loro risposte. Nel 2024 erano solo 11. Il sito sta diventando una fonte riconosciuta anche dai motori di ricerca basati su AI.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>% di Visite per Sorgente (2025)</div>
+      <div class="chart-container"><canvas id="chart-sorgenti-torta"></canvas></div>
+      <div class="explain-box">
+        <div class="explain-title">💡 Come leggere questo grafico</div>
+        Ogni "fetta" rappresenta quanta parte del traffico arriva da quella sorgente. La ricerca Google è la fetta più grande: quasi 1 visita su 2 arriva da qualcuno che ha cercato qualcosa su Google e ha trovato grusol.it nei risultati.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SEZIONE CONTENUTI ===================== -->
+<div id="contenuti" class="section">
+  <h2 class="section-title">Cosa Leggono i Visitatori</h2>
+  <p class="section-desc">Le pagine più viste e come sono cambiate rispetto al 2024.</p>
+
+  <div class="card-grid">
+    <div class="card full">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Le 10 Pagine Più Viste (2024 vs 2025)</div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Pagina</th><th>Visite 2024</th><th>Visite 2025</th><th>Var.</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="highlight">Schede Informative (informazioniN)</td><td>66.577</td><td>81.216</td><td class="change-up">+22%</td></tr>
+          <tr><td class="highlight">Sociale (socialeN)</td><td>15.803</td><td>23.243</td><td class="change-up">+47%</td></tr>
+          <tr><td class="highlight">Homepage</td><td>16.171</td><td>22.066</td><td class="change-up">+36%</td></tr>
+          <tr><td>Informazioni (versione nuova)</td><td>10.151</td><td>12.816</td><td class="change-up">+26%</td></tr>
+          <tr><td>Voce Sociale (nuova)</td><td>2.185</td><td>3.615</td><td class="change-up">+65%</td></tr>
+          <tr><td class="highlight">Sostienici (nuova)</td><td>160</td><td>1.582</td><td class="change-up">+889%</td></tr>
+          <tr><td>Rivista Appunti</td><td>1.057</td><td>1.325</td><td class="change-up">+25%</td></tr>
+          <tr><td>Formazione (nuova)</td><td>222</td><td>778</td><td class="change-up">+250%</td></tr>
+          <tr><td>Donatore</td><td>0</td><td>761</td><td class="change-up">nuova</td></tr>
+          <tr><td>Appunti Articoli</td><td>875</td><td>882</td><td class="change-up">+1%</td></tr>
+        </tbody>
+      </table>
+      <div class="insight success">
+        <strong>Le schede informative restano il cuore del sito</strong> con oltre 81.000 visualizzazioni. Ma la crescita più interessante è della pagina <strong>"Sostienici"</strong> che è passata da 160 a 1.582 visite (+889%) e della nuova pagina <strong>"Donatore"</strong> (761 visite, non esisteva nel 2024).
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent)"></span>Top 10 Pagine 2025 (visualizzazioni)</div>
+      <div class="chart-container tall"><canvas id="chart-pagine"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Le Sezioni del Sito</div>
+      <div class="chart-container"><canvas id="chart-sezioni"></canvas></div>
+      <div class="explain-box">
+        <div class="explain-title">💡 Cosa sono le "sezioni"</div>
+        Il sito ha diverse sezioni (Informazioni, Sociale, Appunti, Sostienici...). Qui raggruppiamo tutte le pagine di ogni sezione per capire quale attira più lettori. Le schede informative da sole rappresentano più della metà di tutto ciò che viene letto sul sito.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Nota sulle Pagine Duplicate</div>
+      <div style="font-size:0.88rem; line-height:1.7;">
+        <p>Il sito ha <strong>due versioni di molte pagine</strong>: ad esempio <em>informazioniN.asp</em> e <em>informazioniNew.asp</em>, oppure <em>vocesocialeN.asp</em> e <em>voceSocialeNew.asp</em>.</p>
+        <p style="margin-top:0.6rem">Questo è un problema perché:</p>
+        <p style="margin-top:0.4rem"><strong>1.</strong> I visitatori possono trovarsi su pagine diverse con contenuti simili, creando confusione.</p>
+        <p style="margin-top:0.4rem"><strong>2.</strong> Google vede due pagine che parlano dello stesso argomento e non sa quale privilegiare nei risultati di ricerca. Questo può penalizzare il posizionamento.</p>
+        <p style="margin-top:0.4rem"><strong>3.</strong> I numeri di traffico si "spezzano" tra due pagine, rendendo più difficile capire il vero impatto di ogni sezione.</p>
+        <p style="margin-top:0.8rem"><em>Raccomandazione: unificare le pagine, facendo in modo che i vecchi indirizzi reindirizzino automaticamente a quelli nuovi.</em></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SEZIONE COINVOLGIMENTO ===================== -->
+<div id="coinvolgimento" class="section">
+  <h2 class="section-title">Il Coinvolgimento: Quanto si Fermano?</h2>
+  <p class="section-desc">I numeri sulla "durata del coinvolgimento" possono sembrare preoccupanti. Ecco cosa significano davvero e perché vanno letti con attenzione.</p>
+
+  <div class="card-grid">
+    <div class="card full">
+      <div class="card-title"><span class="dot" style="background:var(--accent4)"></span>Il Coinvolgimento per Sorgente di Traffico</div>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Come arrivano</th><th>Tasso coinvolgim. 2024</th><th>Tasso coinvolgim. 2025</th><th>Durata media 2025</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>🎬 Video (YouTube)</td><td>100%</td><td>67,8%</td><td>6,4 sec</td></tr>
+          <tr><td class="highlight">🔗 Link da altri siti (incl. newsletter)</td><td>66,2%</td><td>58,5%</td><td>5,2 sec</td></tr>
+          <tr><td>📱 Social (Facebook ecc.)</td><td>45,7%</td><td>31,0%</td><td>3,6 sec</td></tr>
+          <tr><td>📩 Accesso diretto</td><td>32,6%</td><td>37,4%</td><td>3,6 sec</td></tr>
+          <tr><td>🔍 Ricerca Google</td><td>22,4%</td><td>21,1%</td><td>0,7 sec</td></tr>
+        </tbody>
+      </table>
+
+      <div class="explain-box">
+        <div class="explain-title">💡 Ma la gente sta davvero pochissimo? Ecco la spiegazione</div>
+        <p>La "durata media del coinvolgimento" di Google Analytics è un numero che spesso sembra molto basso (pochi secondi!) e può spaventare. Ecco cosa succede davvero:</p>
+        <p style="margin-top:0.5rem"><strong>1. Google Analytics conta solo il tempo "attivo".</strong> Se una persona apre una pagina e la legge per 3 minuti senza toccare nulla (non scrolla, non clicca), GA4 registra zero secondi. Conta solo quando il visitatore interagisce attivamente. Quindi "0,7 secondi" da Google non vuol dire che la persona è stata sul sito meno di un secondo.</p>
+        <p style="margin-top:0.5rem"><strong>2. La media è "schiacciata" dal rimbalzo.</strong> Il 70% dei visitatori da Google arriva su una scheda informativa, legge quello che gli serve e se ne va. Questi visitatori hanno durata zero. Il 30% che resta e interagisce ha durate molto più alte. Ma la media di tutti insieme viene bassissima.</p>
+        <p style="margin-top:0.5rem"><strong>3. È normale per siti informativi.</strong> Il sito di Gruppo Solidarietà funziona come un'"enciclopedia": la gente cerca un'informazione specifica, la trova, e se ne va soddisfatta. Non è un social network dove la gente resta a lungo. <strong>Questo non è un problema</strong>, è il modo in cui funzionano i siti di riferimento e documentazione.</p>
+        <p style="margin-top:0.5rem"><strong>4. Chi arriva dalla newsletter o da link diretti si ferma di più.</strong> Questo è un segnale molto positivo: chi vi conosce e vi segue (tramite newsletter, segnalibri, link ricevuti) interagisce molto di più di chi vi trova per caso su Google. Sono visitatori "di qualità".</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>Tasso di Coinvolgimento per Sorgente</div>
+      <div class="chart-container"><canvas id="chart-engagement"></canvas></div>
+      <div class="insight">
+        <strong>Chi vi cerca attivamente si coinvolge di più.</strong> I visitatori da link (newsletter inclusa) e da accesso diretto hanno tassi di coinvolgimento del 37-59%. Da Google solo il 21%, ma è il dato tipico per siti informativi.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="dot" style="background:var(--accent)"></span>Durata Media Coinvolgimento per Sorgente</div>
+      <div class="chart-container"><canvas id="chart-durata"></canvas></div>
+      <div class="insight warning">
+        <strong>Attenzione alla lettura:</strong> Questi numeri sembrano bassissimi perché sono "medie per sessione", cioè includono anche tutte le visite dove la persona se n'è andata subito. Il dato importante è il <strong>tasso di coinvolgimento</strong> (grafico a sinistra), non la durata grezza.
+      </div>
+    </div>
+
+    <div class="card full">
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Un Numero Più Utile: il "Tasso di Coinvolgimento"</div>
+      <div style="font-size:0.88rem; line-height:1.7;">
+        <p>Invece di guardare i secondi di permanenza (che sono fuorvianti), concentriamoci su un numero più chiaro:</p>
+        <p style="margin-top:0.6rem"><strong>Il 30,7% delle visite al sito sono "attive"</strong> — cioè quasi 1 visita su 3 è di una persona che fa qualcosa sul sito: clicca un link, legge più pagine, scrolla un articolo.</p>
+        <p style="margin-top:0.6rem">Le altre 7 visite su 10 sono di persone che arrivano (soprattutto da Google), leggono la singola pagina che cercavano, e se ne vanno. <strong>Non è traffico "perso"</strong>: queste persone hanno trovato quello che cercavano. Ma non si "fermano" a scoprire il resto del sito.</p>
+        <p style="margin-top:0.8rem">La buona notizia: <strong>chi arriva dalla newsletter ha un coinvolgimento molto più alto</strong>. Questo conferma che la newsletter è lo strumento migliore per portare visitatori "di qualità" che esplorano il sito, non solo visitatori "di passaggio".</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SEZIONE RACCOMANDAZIONI ===================== -->
+<div id="raccomandazioni" class="section">
+  <h2 class="section-title">Cosa Fare con Questi Dati</h2>
+  <p class="section-desc">Suggerimenti pratici per migliorare l'impatto del sito e della comunicazione online.</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-left: 4px solid var(--accent3);">
+      <div class="card-title"><span class="dot" style="background:var(--accent3)"></span>Le Buone Notizie</div>
+      <div style="font-size:0.88rem; line-height:1.7;">
+        <p>✅ <strong>Il sito cresce forte:</strong> +35% di visite, +45% di nuovi visitatori. Il sito è sempre più visibile e raggiunge più persone.</p>
+        <p style="margin-top:0.6rem">✅ <strong>La newsletter funziona benissimo:</strong> +166% di traffico dalla newsletter. È lo strumento di comunicazione più efficace che avete. Chi arriva dalla newsletter interagisce col sito molto più della media.</p>
+        <p style="margin-top:0.6rem">✅ <strong>Google vi riconosce:</strong> 37.005 visite solo da Google. Il sito è considerato una fonte autorevole su politiche sociali e disabilità.</p>
+        <p style="margin-top:0.6rem">✅ <strong>La pagina "Sostienici" è decollata:</strong> da 160 a 1.582 visite. Plus la nuova pagina "Donatore" con 761 visite. Più persone vedono come sostenervi.</p>
+        <p style="margin-top:0.6rem">✅ <strong>Le AI vi citano:</strong> 433 visite da ChatGPT, Perplexity e altri strumenti AI. Un segnale che i vostri contenuti sono considerati affidabili anche dai nuovi motori di ricerca basati su intelligenza artificiale.</p>
+      </div>
+    </div>
+
+    <div class="card" style="border-left: 4px solid var(--accent);">
+      <div class="card-title"><span class="dot" style="background:var(--accent)"></span>Le Cose da Migliorare</div>
+      <div style="font-size:0.88rem; line-height:1.7;">
+        <p>⚠️ <strong>Pagine duplicate:</strong> Il sito ha due versioni di molte pagine (vecchia e nuova). Questo confonde Google e disperde il traffico. Bisogna unificarle.</p>
+        <p style="margin-top:0.6rem">⚠️ <strong>Da visitatore a sostenitore:</strong> La pagina "Sostienici" ha 1.582 visite, ma la pagina effettiva di donazione ne ha solo 357. Molte persone si fermano prima di donare. La pagina va resa più coinvolgente.</p>
+        <p style="margin-top:0.6rem">⚠️ <strong>Il 70% dei visitatori da Google se ne va subito:</strong> Arrivano, leggono la scheda informativa, e non scoprono il resto del sito. Serve un modo per "trattenerli": un box tipo "Se ti è stato utile, iscriviti alla newsletter" o "Leggi anche..."</p>
+        <p style="margin-top:0.6rem">⚠️ <strong>Da visitatore a abbonato:</strong> Con 49.542 nuovi visitatori e 194 abbonati alla rivista Appunti, meno dell'1% diventa abbonato. Un semplice modulo di iscrizione alla newsletter visibile su ogni pagina potrebbe cambiare molto.</p>
+      </div>
+    </div>
+
+    <div class="card full" style="border-left: 4px solid var(--accent2);">
+      <div class="card-title"><span class="dot" style="background:var(--accent2)"></span>5 Azioni Concrete</div>
+      <div style="font-size:0.88rem; line-height:1.8;">
+        <p><strong>1. 📩 Continuare a investire sulla newsletter.</strong> È lo strumento con il miglior ritorno: ogni newsletter porta migliaia di visite di persone che interagiscono davvero col sito. Se possibile, aumentare la frequenza di invio e arricchire i contenuti con link a più pagine del sito.</p>
+        <p style="margin-top:0.8rem"><strong>2. 📋 Aggiungere un box di iscrizione alla newsletter su ogni pagina.</strong> Le schede informative da sole hanno 81.000 visite. Se anche solo l'1% si iscrivesse alla newsletter, sarebbero 800 nuovi contatti. Serve un box visibile con un messaggio tipo: "Vuoi restare aggiornato sulle politiche sociali? Iscriviti alla newsletter gratuita."</p>
+        <p style="margin-top:0.8rem"><strong>3. 🔗 Unificare le pagine duplicate.</strong> Fare in modo che gli indirizzi vecchi (come informazioniN.asp) portino automaticamente alla versione nuova. Questo migliora il posizionamento su Google e semplifica la manutenzione del sito.</p>
+        <p style="margin-top:0.8rem"><strong>4. 💰 Ripensare il percorso "Sostienici".</strong> La pagina ha 1.582 visite ma solo 357 arrivano alla donazione. Aggiungere: una storia di impatto ("Grazie ai vostri sostegni nel 2025 abbiamo..."), indicare chiaramente cosa si può fare (5x1000, donazione, abbonamento), e mettere un pulsante "Sostienici" ben visibile nell'homepage e nelle pagine più lette.</p>
+        <p style="margin-top:0.8rem"><strong>5. 📊 Usare questi numeri nei report per finanziatori.</strong> "Nel 2025 il sito ha raggiunto 49.542 nuovi visitatori (+45%), la newsletter genera 7.418 visite al sito, le schede informative sono state consultate 81.000 volte." Sono numeri convincenti da allegare a richieste di contributo a fondazioni e enti.</p>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<div class="footer">
+  Gruppo Solidarietà – Centro di Documentazione sulle Politiche Sociali<br>
+  Moie di Maiolati Spontini (AN) &middot; <strong>grusol.it</strong> &middot; Report generato il 20 febbraio 2026
+</div>
+
+<script>
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 12;
+Chart.defaults.color = '#7A7A7A';
+Chart.defaults.plugins.legend.labels.usePointStyle = true;
+Chart.defaults.plugins.legend.labels.pointStyleWidth = 8;
+
+const C = {
+  blue: '#2E6F95', red: '#C44536', green: '#5B8C5A', gold: '#D4A843',
+  blueLight: 'rgba(46,111,149,0.15)', redLight: 'rgba(196,69,54,0.15)',
+  greenLight: 'rgba(91,140,90,0.15)', goldLight: 'rgba(212,168,67,0.15)',
+};
+
+// 1. Confronto sessioni
+new Chart(document.getElementById('chart-confronto-sessioni'), {
+  type: 'bar',
+  data: {
+    labels: ['Visite Totali', 'Visite "Attive"', 'Pagine Lette (÷1000)'],
+    datasets: [
+      {
+        label: '2024',
+        data: [55173, 17325, 125.8],
+        backgroundColor: 'rgba(46,111,149,0.3)',
+        borderColor: C.blue,
+        borderWidth: 2,
+        borderRadius: 6
+      },
+      {
+        label: '2025',
+        data: [74570, 22913, 156.6],
+        backgroundColor: 'rgba(46,111,149,0.7)',
+        borderColor: C.blue,
+        borderWidth: 2,
+        borderRadius: 6
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    scales: { y: { beginAtZero: true, grid: { color: '#F0EDE8' } }, x: { grid: { display: false } } }
+  }
+});
+
+// 2. Confronto nuovi visitatori
+new Chart(document.getElementById('chart-confronto-nuovi'), {
+  type: 'bar',
+  data: {
+    labels: ['Nuovi Visitatori'],
+    datasets: [
+      {
+        label: '2024',
+        data: [34080],
+        backgroundColor: 'rgba(91,140,90,0.3)',
+        borderColor: C.green,
+        borderWidth: 2,
+        borderRadius: 6,
+        barPercentage: 0.5
+      },
+      {
+        label: '2025',
+        data: [49542],
+        backgroundColor: 'rgba(91,140,90,0.7)',
+        borderColor: C.green,
+        borderWidth: 2,
+        borderRadius: 6,
+        barPercentage: 0.5
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    scales: { y: { beginAtZero: true, grid: { color: '#F0EDE8' } }, x: { grid: { display: false } } }
+  }
+});
+
+// 3. Sorgenti confronto
+new Chart(document.getElementById('chart-sorgenti-confronto'), {
+  type: 'bar',
+  data: {
+    labels: ['Ricerca Google', 'Accesso Diretto', 'Link da altri siti\n(incl. newsletter)', 'Social'],
+    datasets: [
+      {
+        label: '2024',
+        data: [27494, 19111, 5363, 2996],
+        backgroundColor: 'rgba(46,111,149,0.3)',
+        borderColor: C.blue,
+        borderWidth: 2,
+        borderRadius: 4
+      },
+      {
+        label: '2025',
+        data: [39794, 19406, 9628, 4955],
+        backgroundColor: 'rgba(46,111,149,0.7)',
+        borderColor: C.blue,
+        borderWidth: 2,
+        borderRadius: 4
+      }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    scales: { y: { beginAtZero: true, grid: { color: '#F0EDE8' }, ticks: { callback: v => (v/1000)+'k' } }, x: { grid: { display: false } } }
+  }
+});
+
+// 4. Sorgenti torta 2025
+new Chart(document.getElementById('chart-sorgenti-torta'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Ricerca Google (53%)', 'Accesso Diretto (26%)', 'Link/Newsletter (13%)', 'Social (7%)', 'Altro (1%)'],
+    datasets: [{
+      data: [39794, 19406, 9628, 4955, 787],
+      backgroundColor: [C.blue, 'rgba(46,111,149,0.5)', C.green, C.gold, '#E8E2D8'],
+      borderWidth: 0,
+      cutout: '65%'
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+});
+
+// 5. Top pagine 2025
+new Chart(document.getElementById('chart-pagine'), {
+  type: 'bar',
+  data: {
+    labels: ['Schede Informative', 'Sociale', 'Homepage', 'Informazioni (new)', 'Voce Sociale (new)', 'Sostienici', 'Rivista Appunti', 'Appunti Articoli', 'Formazione', 'Donatore'],
+    datasets: [{
+      data: [81216, 23243, 22066, 12816, 4967, 1582, 1325, 882, 778, 761],
+      backgroundColor: [C.blue, 'rgba(46,111,149,0.7)', 'rgba(46,111,149,0.6)', 'rgba(91,140,90,0.6)', C.gold, C.red, 'rgba(196,69,54,0.4)', '#B2DCE6', '#E8E2D8', '#E8E2D8'],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { x: { grid: { color: '#F0EDE8' }, ticks: { callback: v => (v/1000)+'k' } }, y: { grid: { display: false } } }
+  }
+});
+
+// 6. Sezioni aggregate
+new Chart(document.getElementById('chart-sezioni'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Informazioni (94.032)', 'Sociale (28.210)', 'Homepage (22.066)', 'Appunti (4.253)', 'Sostienici/Donazioni (2.700)', 'Formazione (778)', 'Altro'],
+    datasets: [{
+      data: [94032, 28210, 22066, 4253, 2700, 778, 5000],
+      backgroundColor: [C.blue, 'rgba(46,111,149,0.6)', C.green, C.gold, C.red, '#B2DCE6', '#E8E2D8'],
+      borderWidth: 0,
+      cutout: '55%'
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } } }
+});
+
+// 7. Engagement per sorgente (2025)
+new Chart(document.getElementById('chart-engagement'), {
+  type: 'bar',
+  data: {
+    labels: ['Video\n(YouTube)', 'Link/Newsletter\n(Referral)', 'Accesso\nDiretto', 'Social\n(Facebook)', 'Ricerca\nGoogle'],
+    datasets: [{
+      label: '% visite coinvolte',
+      data: [67.8, 58.5, 37.4, 31.0, 21.1],
+      backgroundColor: [C.green, 'rgba(91,140,90,0.7)', C.gold, 'rgba(212,168,67,0.6)', C.blue],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, max: 100, grid: { color: '#F0EDE8' }, ticks: { callback: v => v+'%' } }, x: { grid: { display: false } } }
+  }
+});
+
+// 8. Durata media coinvolgimento per sorgente
+new Chart(document.getElementById('chart-durata'), {
+  type: 'bar',
+  data: {
+    labels: ['Video\n(YouTube)', 'Link/Newsletter\n(Referral)', 'Accesso\nDiretto', 'Social\n(Facebook)', 'Ricerca\nGoogle'],
+    datasets: [{
+      label: 'secondi medi',
+      data: [6.4, 5.2, 3.6, 3.6, 0.7],
+      backgroundColor: [C.green, 'rgba(91,140,90,0.7)', C.gold, 'rgba(212,168,67,0.6)', C.blue],
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: true,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, grid: { color: '#F0EDE8' }, title: { display: true, text: 'secondi' } }, x: { grid: { display: false } } }
+  }
+});
+
+// Navigation
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({ top: document.querySelector('.nav').offsetTop - 10, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
